@@ -1,31 +1,51 @@
 <template>
   <div id="app">
-    <div id="nav">
-      <router-link to="/">Home</router-link> |
-      <router-link to="/about">About</router-link>
-    </div>
+    <nav class="navbar navbar-light bg-light static-top">
+      <div class="container">
+        <router-link class="navbar-brand" to="/">Start Bootstrap</router-link>
+        <!-- <a class="navbar-brand" href="#">Start Bootstrap</a> -->
+        <div class="ml-auto">
+          <router-link class="mr-5" to="/posts">Posts</router-link>
+          <router-link class="mr-5" to="/login">Log In</router-link>
+          <router-link class="btn btn-primary mr-5" to="/signup">Sign Up</router-link><span v-if="isLoggedIn"> | <a @click="logout">Logout</a></span>
+          <!-- <a class="btn btn-primary" href="login.html">Sign In</a> -->
+          
+          <!-- <a class="" href="login.html">Log In</a> -->
+        </div>
+      </div>
+    </nav>
     <router-view/>
   </div>
 </template>
 
-<style>
-#app {
-  font-family: 'Avenir', Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
+<script>
+export default {
+  computed : {
+      isLoggedIn : function(){ return this.$store.getters.isLoggedIn}
+    },
+    methods: {
+      logout: function () {
+        this.$store.dispatch('logout')
+        .then(() => {
+          this.$router.push('/login')
+        })
+      }
+    },
+    created: function () {
+      this.$http.interceptors.response.use(undefined, function (err) {
+        return new Promise(function (resolve, reject) {
+          if (err.status === 401 && err.config && !err.config.__isRetryRequest) {
+            this.$store.dispatch(logout)
+          }
+          throw err;
+        });
+      });
+    }
 }
-#nav {
-  padding: 30px;
-}
+</script>
 
-#nav a {
-  font-weight: bold;
-  color: #2c3e50;
-}
-
-#nav a.router-link-exact-active {
-  color: #42b983;
-}
+<style scoped>
+  a {
+    text-decoration: none;
+  }
 </style>
