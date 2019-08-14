@@ -6,6 +6,7 @@ import Login from './views/Login.vue'
 import Signup from './views/Signup.vue'
 import Posts from './views/Posts.vue'
 import PostId from './views/PostId.vue'
+import Dashboard from './views/Dashboard.vue'
 
 Vue.use(Router)
 
@@ -13,6 +14,10 @@ export default new Router({
   mode: 'history',
   base: process.env.BASE_URL,
   routes: [
+    {
+      path: '*',
+      redirect: '/'
+    },
     {
       path: '/',
       name: 'home',
@@ -44,6 +49,11 @@ export default new Router({
       name: 'PostId',
       component: PostId,
       props: { imgUrl: '' }
+    },
+    {
+      path: '/dashboard',
+      name: 'Dashboard',
+      component: Dashboard
     }
   ]
 })
